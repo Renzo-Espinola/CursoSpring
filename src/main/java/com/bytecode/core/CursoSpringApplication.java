@@ -1,5 +1,6 @@
 package com.bytecode.core;
 
+import com.bytecode.core.components.PostComponent;
 import com.bytecode.core.model.Conexion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +14,10 @@ public class CursoSpringApplication implements CommandLineRunner {
 	@Qualifier("beanConexion")
 	private Conexion conexion;
 
+	@Autowired
+	@Qualifier("com.bytecode.core.components.postComponent")
+    public PostComponent postComponent;
+
 	public static void main(String[] args) {
 		SpringApplication.run(CursoSpringApplication.class, args);
 	}
@@ -20,6 +25,8 @@ public class CursoSpringApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println(conexion.getDb());
+		postComponent.getPosts().forEach(p->{
+			System.out.println(p.getDescripcion());
+		});
 	}
 }
