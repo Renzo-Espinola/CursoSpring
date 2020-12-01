@@ -19,8 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-
-
 @Controller
 @RequestMapping("/home")
 public class ControllerBasic {
@@ -37,44 +35,45 @@ public class ControllerBasic {
     private PostComponent _postComponent;
 
 
-    @GetMapping(path= {"/posts","/"})
-    public String saludar(Model model){
-        model.addAttribute("posts",this._postComponent.getPosts());
-        return "index";}
-    
+    @GetMapping(path = {"/posts", "/"})
+    public String saludar(Model model) {
+        model.addAttribute("posts", this._postComponent.getPosts());
+        return "index";
+    }
+
     /*@GetMapping(path="/public")
     public ModelAndView post (){
         ModelAndView modelAndView = new ModelAndView(Pages.HOME);
         modelAndView.addObject("posts",this.getPost());
         return modelAndView;
     }*/
-    @GetMapping(path={"/post","/post/p/{post}"})
-    public ModelAndView getPostIndividual (
-        @RequestParam(defaultValue = "1", name = "id", required = false) int id
-        /*@PathVariable(required = true, name = "post") int id*/
+    @GetMapping(path = {"/post", "/post/p/{post}"})
+    public ModelAndView getPostIndividual(
+            @RequestParam(defaultValue = "1", name = "id", required = false) int id
+            /*@PathVariable(required = true, name = "post") int id*/
 
-    ){
-    ModelAndView modelAndView = new ModelAndView(Pages.POST);
-    List <Post> postFiltrado = this._postComponent.getPosts().stream()
-                                .filter((p)->{return p.getId()==id;}).collect(Collectors.toList());
-    modelAndView.addObject("post",postFiltrado.get(0));
-    return  modelAndView;
+    ) {
+        ModelAndView modelAndView = new ModelAndView(Pages.POST);
+        List<Post> postFiltrado = this._postComponent.getPosts().stream()
+                .filter((p) -> {
+                    return p.getId() == id;
+                }).collect(Collectors.toList());
+        modelAndView.addObject("post", postFiltrado.get(0));
+        return modelAndView;
     }
-    
-    @GetMapping(path="/postNew")
-    public ModelAndView getForm(){
+
+    @GetMapping(path = "/postNew")
+    public ModelAndView getForm() {
         return new ModelAndView("form").addObject("post", new Post());
     }
-    
+
     @PostMapping("/addNewPost")
-    public String AddNewPost (Post post, Model model) {
+    public String AddNewPost(Post post, Model model) {
         List<Post> posts = this._postComponent.getPosts();
         posts.add(post);
-        model.addAttribute("posts",post);
+        model.addAttribute("posts", post);
         return "index";
     }
-    
-    
-    
+
 
 }
