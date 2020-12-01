@@ -8,4 +8,6 @@ public interface PostService {
 
     public List<Post> validation(List<Post> posts);
 
+    public void addClass(Class clazz);
+
 }

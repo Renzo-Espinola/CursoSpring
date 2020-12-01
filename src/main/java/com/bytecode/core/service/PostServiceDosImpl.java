@@ -4,6 +4,7 @@ import com.bytecode.core.model.Post;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service("ServiceDos")
 public class PostServiceDosImpl implements PostService {
     @Override
@@ -15,6 +16,11 @@ public class PostServiceDosImpl implements PostService {
             }
         }
         return posts;
+    }
+
+    @Override
+    public void addClass(Class clazz) {
+        System.out.println(clazz.getName());
     }
 }
 

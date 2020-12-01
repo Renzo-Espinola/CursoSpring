@@ -21,9 +21,24 @@ public class CursoSpringApplication implements CommandLineRunner {
     @Qualifier("com.bytecode.core.components.postComponent")
     public PostComponent postComponent;
 
+    public PostService postService;
+
+    public PostService getPostService() {
+        return postService;
+    }
+
+    //2 metodo de inyeccion mediante constructor
+    @Autowired
+    public CursoSpringApplication(@Qualifier("ServiceDecorado")  PostService postService){
+        this.postService= postService;
+    }
+    //3 metodo de inyeccion
     @Autowired
     @Qualifier("ServiceDecorado")
-    public PostService postService;
+    public void setPostService(PostService postService) {
+        this.postService = postService;
+        this.postService.addClass(CursoSpringApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(CursoSpringApplication.class, args);
