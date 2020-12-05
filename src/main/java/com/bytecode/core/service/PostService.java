@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostService {
 
-    public List<Post> validation(List<Post> posts);
+    public List<Post> validation(List<Post> posts) throws NullPointerException;
 
     public void addClass(Class clazz);
 
