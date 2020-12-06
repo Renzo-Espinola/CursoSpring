@@ -7,17 +7,30 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLOutput;
 
 @SpringBootApplication
 public class CursoSpringApplication implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Value("${cursospring.jdbc.import.ruta}")
+    private String ruta;
+    @Value("${cursospring.jdbc.import}")
+    private String importar;
+
+    Log log = LogFactory.getLog(getClass());
 
     @Autowired
     @Qualifier("beanConexion")
@@ -50,11 +63,30 @@ public class CursoSpringApplication implements CommandLineRunner {
         SpringApplication.run(CursoSpringApplication.class, args);
     }
 
+
     @Override
     public void run(String... args) throws Exception {
-        jdbcTemplate.execute("insert into permiso (Nombre) values ('Ejemplo')");
+        if (importar.equalsIgnoreCase("true")) {
+            Path path = Paths.get(ruta);
+
+            try {
+                BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.forName("UTF-8"));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    jdbcTemplate.execute(line);
+                    log.info(line);
+                }
+            } catch(IOException ex){
+                System.out.println(ex);
+
+            }
+
+        }
+        log.info("Tenemos esta cantidad de permisos " + jdbcTemplate.queryForObject(" SELECT count(*) FROM blogrenzo.permiso;",Integer.class));
     }
+
 }
+
     /*@Override
     public void run(String... args) throws Exception {
 
@@ -74,3 +106,19 @@ public class CursoSpringApplication implements CommandLineRunner {
         }
     }
     }*/
+   /* @Override
+    public void run(String... args) throws Exception {
+
+        Path path = Paths.get("src/main/resources/import.sql");
+        Log log = LogFactory.getLog(getClass());
+        try {
+            BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.forName("UTF-8"));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                jdbcTemplate.execute(line);
+                log.info(line);
+            }
+        } catch (IOException ex) {
+            System.out.println(ex);
+
+        }*/
